@@ -1,0 +1,17 @@
+require "thor"
+
+class Capesuzette < Thor
+desc "create", "mkdir capesuzette project dir"
+method_option :destination, :type => :string, :default => "capesuzette", :aliases => "--target"
+def create
+ FileUtils.mkdir options[:destination] unless File.exists? options[:destination] 
+ payloaddir = File.join(options[:destination],"payload") 
+ FileUtils.mkdir payloaddir unless File.exists? payloaddir
+ Dir.chdir options[:destination]
+ f = IO.popen("capify .")
+ puts f.readlines
+ f.close
+end
+end
+
+Capesuzette.start
